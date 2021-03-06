@@ -1,0 +1,33 @@
+.classificacao{
+
+    display: flex;  
+    margin-top: 50px;
+    height: 80%;
+    padding-right: 8.5%;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.classificacao span{
+
+    font-size: 1.1rem;
+    font-weight: bold;
+    
+}
+
+.pessoa{
+
+    display: flex;
+    height: 10rem;
+    width: 10rem;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pessoa img{
+
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+}

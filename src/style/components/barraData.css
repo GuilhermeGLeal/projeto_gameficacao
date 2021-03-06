@@ -1,0 +1,38 @@
+.barraData{
+
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 25px;
+}
+
+.barraData span{
+
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.barraData > div{
+
+   flex: 1;
+   height: 4px;
+   border-radius: 4px;
+   background: gray;
+   margin: 0 1.5rem;
+   position: relative;
+}
+
+.barraData > div > div{
+
+    height: 4px;
+    border-radius: 4px;
+    background: turquoise;
+ }
+ 
+ .valorAtual{
+     position: absolute;
+     top: 12px;
+     transform: translateX(-40%);
+     color: blue;
+ }

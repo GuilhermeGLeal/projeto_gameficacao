@@ -4,12 +4,13 @@ import calculo from '../js/calcularData.js'
 
 const Pessoa = (props) =>{
     
-    const dateFinal = new Date(2021, 5, 8)
+    const dateFinal = new Date(2021, 11, 1)
     let imagem;
     let pontos;
     let nome;
+    
     let diferenca_pro_maior = props.maior_pontuacao - props.pontos
-    let posicao = props.pontos >= 0 ? ((calculo.retornaPosicao(dateFinal.getTime())) - (diferenca_pro_maior)/(props.maior_pontuacao/1.5)) : 0
+    let posicao = props.pontos >= 0 ? ((calculo.retornaPosicao(dateFinal.getTime(), props.dateatual.getTime())) - (diferenca_pro_maior)/(props.maior_pontuacao/1.5)) : 0
     
     if(props.nome){
         nome = <span> {props.nome} </span>

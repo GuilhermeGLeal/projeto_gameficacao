@@ -1,11 +1,11 @@
 import '../style/components/barraData.css'
 import calculo from '../js/calcularData.js'
 
-const BarraData= () =>{
+const BarraData= (props) =>{
 
-    const dateAtual = new Date()
-    const dateFinal = new Date(2021, 5, 8)
-    let posicao_valor = calculo.retornaPosicao(dateFinal.getTime())
+    const dateAtual = props.dateatual
+    const dateFinal = new Date(2021, 11, 1)
+    let posicao_valor = calculo.retornaPosicao(dateFinal.getTime(), dateAtual.getTime())
 
     
     return (

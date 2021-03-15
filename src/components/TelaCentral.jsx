@@ -1,15 +1,16 @@
 import BarraData from "../components/BarraData";
 import Pessoa from "../components/Pessoa";
 import { useState, useEffect } from "react";
-import '../style/components/pessoa_info.css'
+
 
 
 const TelaCentral = (props) => {
   
  
-  const [estagiarios, setEstagiarios] = useState([])
-  const [list, setList] = useState([])
- 
+  const [estagiarios, setEstagiarios] = useState([]);
+  const [list, setList] = useState([]);
+  const [estado, setEstado] = useState();
+
   const getPlan = async () => {
     const content = await fetch(
       'https://spreadsheets.google.com/feeds/list/1AJt6VNVS0Qa4X3EP2KKcVJNpmrENHiYakFxx6u8bvQ8/oxlfih8/public/values?alt=json'
@@ -41,7 +42,7 @@ const TelaCentral = (props) => {
       
         setTimeout(
           () => {
-            
+                setEstado(estagiarios[list.length])
             setList(old => {
               return [ ...old, estagiarios[list.length] ]
             })
@@ -55,85 +56,88 @@ const TelaCentral = (props) => {
     [list]
   )
 
-  function apagaTudo() {
-    
-    
-    // apagar ou atualizar os componentes existentes
-    // para que nao repitam tudo novamente e sim apenas exibe em uma posicao na tela
-    let nodeSection = document.getElementsByClassName('barraData')
-    let nodediv = document.getElementsByClassName('classificacao')
+    const retornaDataFormatada = dataori => {
 
-    if(nodediv.parentNode && nodeSection.parentNode){
-       nodeSection.parentNode.removeChild(nodeSection);
-     nodediv.parentNode.removeChild(nodediv);
-  
+    if(dataori){
+ 
+     let [dia, mes, ano] = dataori.split('/')
+      return new Date(ano, mes-1, dia)
     }
+    return new Date()
    
   }
-  const retornaDataFormatada = dataori => {
 
-    // tem como chamar uma vez só?
-    let [dia, mes, ano] = dataori.split('/')
-    return new Date(ano, mes-1, dia)
-  }
+  let barraData;
+  let pessoas;
 
-  const retornaMaiorPontuacao = item =>{
+  const retornaMaiorPontuacao = (vitor, gomes, hudson, joao) =>{
 
-     // tem como chamar uma vez só?
-    let pontos = [parseInt(item.gsx$vitorrocha.$t), parseInt(item.gsx$joãocalado.$t), parseInt(item.gsx$hudsonpedroso.$t),
-    parseInt(item.gsx$guilhermeleal.$t)]
-
+    let pontos = [vitor, gomes, hudson, joao]
     return  Math.max(...pontos);
   }
  
-  return (
- 
-    <div id="tela">
-      {
-        list.map((item, index) => (
-        
-       
-        <>
-        {apagaTudo()}
-         <BarraData key={index} dateatual={retornaDataFormatada(item.gsx$data.$t)}/>
-        
-        <div className="classificacao">         
-         
-          <Pessoa
-            key={index + 2}
-            nome="vitor"
-            pontos={parseInt(item.gsx$vitorrocha.$t)}
-            maior_pontuacao = {retornaMaiorPontuacao(item)}
-            dateatual={retornaDataFormatada(item.gsx$data.$t)}
-          />
-          <Pessoa
-            key={index + 3}
-            nome="joao"
-            pontos={parseInt(item.gsx$joãocalado.$t)}
-            maior_pontuacao = {retornaMaiorPontuacao(item)}
-            dateatual={retornaDataFormatada(item.gsx$data.$t)}
-          />
-          <Pessoa
-            key={index + 4}
-            nome="hudson"
-            pontos={parseInt(item.gsx$hudsonpedroso.$t)}
-            maior_pontuacao = {retornaMaiorPontuacao(item)}
-            dateatual={retornaDataFormatada(item.gsx$data.$t)}
-          />
-          <Pessoa
-            key={index + 5}
-            nome="gomes"
-            pontos={parseInt(item.gsx$guilhermeleal.$t)}
-            maior_pontuacao = {retornaMaiorPontuacao(item)}
-            dateatual={retornaDataFormatada(item.gsx$data.$t)}
-          />
-         
-      
-          </div>
-          </>
-      ))}
+  const renderizaCond = _ =>{
 
-    </div>
+      if(estado && estado.gsx$data.$t){
+
+          let vitor_pontos = parseInt(estado.gsx$vitorrocha.$t);
+          let gomes_pontos = parseInt(estado.gsx$guilhermeleal.$t);
+          let joao_pontos = parseInt(estado.gsx$joãocalado.$t);
+          let hudson_pontos = parseInt(estado.gsx$hudsonpedroso.$t);
+          let dataformatada = retornaDataFormatada(estado.gsx$data.$t)
+          let maior_pontuacao = retornaMaiorPontuacao(vitor_pontos, gomes_pontos, hudson_pontos, joao_pontos)
+
+          barraData = <BarraData key={1} dateatual={dataformatada}/>
+          pessoas =  
+          <div className="classificacao">
+            <Pessoa
+                key={4}
+                nome="Guilherme Gomes"
+                pontos={gomes_pontos}
+                maior_pontuacao = {maior_pontuacao}
+                dateatual={dataformatada}
+            />
+             <Pessoa
+              key={3}
+              nome="Hudson"
+              pontos={hudson_pontos}
+              maior_pontuacao = {maior_pontuacao}
+              dateatual={dataformatada}
+            />
+             <Pessoa
+              key={2}
+              nome="João Calado"
+              pontos={joao_pontos}
+              maior_pontuacao = {maior_pontuacao}
+              dateatual={dataformatada}
+            />
+            <Pessoa
+              key={1}
+              nome="Vitor Rocha"
+              pontos={vitor_pontos}
+              maior_pontuacao = {maior_pontuacao}
+              dateatual={dataformatada}
+            /> 
+
+          </div>
+      }
+      else{
+
+        barraData = <p>Está em carregamento, por favor espere!!</p>
+        pessoas = ""
+      }
+  }
+  return (
+    
+    <>      
+      
+      {renderizaCond()}
+
+      {barraData}
+       {pessoas}                
+      
+    
+    </>
   
   );
 };
